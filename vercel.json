@@ -1,0 +1,14 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm start",
+  "installCommand": "npm install",
+  "framework": "create-react-app",
+  "public": true,
+  "env": [
+    {
+      "key": "REACT_APP_WEATHER_API_KEY",
+      "description": "Weather API key from WeatherAPI.com or Open-Meteo",
+      "type": "secret"
+    }
+  ]
+}
