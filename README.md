@@ -20,7 +20,7 @@ A responsive React dashboard for Kenyan weather powered by Open-Meteo API. Featu
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/weather-ai-dashboard.git
+   git clone https://github.com/tonny1theetechie/weather-ai-dashboard.git
    cd weather-ai-dashboard
    ```
 
