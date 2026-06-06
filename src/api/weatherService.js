@@ -177,20 +177,21 @@ async function fetchWeatherData(lat, lon) {
   return fetchJson(url);
 }
 
-function buildWeatherResponse(weatherData, locationData) {
+function buildWeatherResponse(weatherData, locationData, locationOverride = null) {
   const timezone = weatherData.timezone || 'Africa/Nairobi';
   const current = weatherData.current_weather;
   const localtime = current?.time ? formatLocationTime(current.time, timezone) : '';
   const location = {
     name:
+      locationOverride?.name ||
       locationData?.address?.city ||
       locationData?.address?.town ||
       locationData?.address?.village ||
       locationData?.address?.county ||
       locationData?.address?.state ||
       'Kenya',
-    region: locationData?.address?.state || locationData?.address?.region || '',
-    country: locationData?.address?.country || 'Kenya',
+    region: locationOverride?.region || locationData?.address?.state || locationData?.address?.region || '',
+    country: locationOverride?.country || locationData?.address?.country || 'Kenya',
     localtime,
   };
   const currentHourIndex = findNearestHourIndex(current.time, weatherData.hourly.time);
@@ -241,10 +242,10 @@ export async function getWeatherByGeo() {
   return buildWeatherResponse(weatherData, locationData);
 }
 
-export async function getWeatherByCoords(lat, lon) {
-  const locationData = await reverseGeocode(lat, lon);
+export async function getWeatherByCoords(lat, lon, locationOverride = null) {
+  const locationData = locationOverride ? null : await reverseGeocode(lat, lon);
   const weatherData = await fetchWeatherData(lat, lon);
-  return buildWeatherResponse(weatherData, locationData);
+  return buildWeatherResponse(weatherData, locationData, locationOverride);
 }
 
 export async function getWeatherByCity(city) {

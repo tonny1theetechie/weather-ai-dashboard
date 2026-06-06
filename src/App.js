@@ -8,6 +8,7 @@ import HourlyForecast from './components/HourlyForecast';
 import AISummary from './components/AISummary';
 import AgriculturalAdvisory from './components/AgriculturalAdvisory';
 import Loader from './components/Loader';
+import locations from './data/kenyaCounties';
 
 function App() {
   const [weatherData, setWeatherData] = useState(null);
@@ -65,12 +66,14 @@ function App() {
     setError('');
 
     let query = '';
+    let countyCoords = null;
     if (typeof search === 'string') {
       query = search;
     } else if (search.type === 'city') {
       query = search.query;
     } else if (search.type === 'county') {
       query = `${search.county} County, Kenya`;
+      countyCoords = locations.countyCoordinates[search.county];
     } else {
       query = '';
     }
@@ -82,7 +85,13 @@ function App() {
     }
 
     try {
-      const data = await getWeatherByCity(query);
+      const data = countyCoords
+        ? await getWeatherByCoords(countyCoords.lat, countyCoords.lon, {
+            name: `${search.county} County`,
+            region: search.county,
+            country: 'Kenya',
+          })
+        : await getWeatherByCity(query);
       setWeatherData(data);
     } catch (searchError) {
       setError(searchError.message);
